@@ -10,6 +10,24 @@ export default function App({ $target }) {
 
   $target.appendChild($app);
 
+  // 정규식으로 파라미터 나누기
+  this.pathToRegex = (path) =>
+    new RegExp("^" + path.replace(/\//g, "\\/").replace(/:\w+/g, "(.+)") + "$");
+
+  // 활성화된 페이지의 파라미터 가져와 배열에 담기
+  this.getParams = (match) => {
+    const values = match.result.slice(1);
+    const keys = Array.from(match.route.path.matchAll(/:(\w+)/g)).map(
+      (result) => result[1]
+    );
+
+    return Object.fromEntries(
+      keys.map((key, i) => {
+        return [key, values[i]];
+      })
+    );
+  };
+
   this.router = async () => {
     const routes = [
       {
@@ -34,23 +52,35 @@ export default function App({ $target }) {
       },
     ];
 
-    const pageMatches = routes.find(
-      (route) => window.location.pathname === route.path
+    const potentialMatches = routes.map((route) => {
+      return {
+        route: route,
+        // result로 변경하고 정규식과 일치하는 pathname을 담는다
+        result: location.pathname.match(this.pathToRegex(route.path)),
+      };
+    });
+
+    console.log(window.location.pathname); // 정규식과 일치하는 pathname이 null이 아닌 경우 담기
+
+    let match = potentialMatches.find(
+      (potentialMatch) => potentialMatch.result !== null
     );
 
-    console.log(window.location.pathname);
-    if (pageMatches) {
-      const { component: Page } = pageMatches;
-      const page = new Page({ $target });
-      page.render();
-    }
-
     // 메인 페이지로 이동시키자
-    if (!pageMatches) {
+    if (!match) {
       const page = new ErrorPage({ $target });
       page.render();
     }
+
+    // match 정보를 getParams에 보내 배열로 출력해서 view에 담기
+    const view = new match.route.component({
+      $target,
+      $initialStaste: this.getParams(match),
+    });
+
+    $app.innerHTML = view.render();
   };
+
   this.navigateTo = (url) => {
     history.pushState(null, null, url);
     this.router();
@@ -60,7 +90,7 @@ export default function App({ $target }) {
 
   document.addEventListener("DOMContentLoaded", () => {
     // 클릭 이벤트가 발생했을 때,
-    // 해당 target이 'data-link' attribute가 있다면
+    // 해당 target이 'data-link' attribute가 있다면(있어야 라우트 하는 건줄 아니깐),
     // 페이지 이동 함수 실행
     document.body.addEventListener("click", (e) => {
       if (e.target.matches("[data-link]")) {
