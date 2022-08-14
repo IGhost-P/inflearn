@@ -10,7 +10,7 @@ export default function App({ $target }) {
 
   $target.appendChild($app);
 
-  const router = async () => {
+  this.router = async () => {
     const routes = [
       {
         path: "/",
@@ -38,6 +38,7 @@ export default function App({ $target }) {
       (route) => window.location.pathname === route.path
     );
 
+    console.log(window.location.pathname);
     if (pageMatches) {
       const { component: Page } = pageMatches;
       const page = new Page({ $target });
@@ -50,5 +51,24 @@ export default function App({ $target }) {
       page.render();
     }
   };
-  router();
+  this.navigateTo = (url) => {
+    history.pushState(null, null, url);
+    this.router();
+  };
+  // 뒤로가기 하거나 새로고침 했을 때 router도 그 페이지에 맞게 동작하도록
+  window.addEventListener("popstate", this.router);
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // 클릭 이벤트가 발생했을 때,
+    // 해당 target이 'data-link' attribute가 있다면
+    // 페이지 이동 함수 실행
+    document.body.addEventListener("click", (e) => {
+      if (e.target.matches("[data-link]")) {
+        e.preventDefault();
+        this.navigateTo(e.target.href);
+      }
+    });
+  });
+
+  this.router();
 }
