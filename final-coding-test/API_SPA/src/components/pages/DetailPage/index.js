@@ -3,6 +3,7 @@ export default function DetailPage({ $target, $initialState = "" }) {
   this.$initialState = $initialState;
   this.render = () => {
     const $items = createEl("div", "items", "Detail");
+    $target.innerHTML = "";
     $target.appendChild($items);
   };
 

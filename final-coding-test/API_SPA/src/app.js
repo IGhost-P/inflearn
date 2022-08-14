@@ -6,9 +6,9 @@ import ErrorPage from "./components/pages/ErrorPage/index.js";
 console.log("app is running!");
 
 export default function App({ $target }) {
-  const $app = createEl("div", "app", "Hello World");
+  this.$app = createEl("div", "app", "Hello");
 
-  $target.appendChild($app);
+  $target.appendChild(this.$app);
 
   // 정규식으로 파라미터 나누기
   this.pathToRegex = (path) =>
@@ -53,6 +53,8 @@ export default function App({ $target }) {
     ];
 
     const potentialMatches = routes.map((route) => {
+      console.log("원본 경로", route.path);
+      console.log("정규식", this.pathToRegex(route.path));
       return {
         route: route,
         // result로 변경하고 정규식과 일치하는 pathname을 담는다
@@ -60,25 +62,25 @@ export default function App({ $target }) {
       };
     });
 
-    console.log(window.location.pathname); // 정규식과 일치하는 pathname이 null이 아닌 경우 담기
+    // 정규식과 일치하는 pathname이 null이 아닌 경우 담기
 
     let match = potentialMatches.find(
       (potentialMatch) => potentialMatch.result !== null
     );
-
+    console.log(potentialMatches, match);
     // 메인 페이지로 이동시키자
     if (!match) {
-      const page = new ErrorPage({ $target });
+      const page = new ErrorPage({ $target: this.$app });
       page.render();
     }
 
     // match 정보를 getParams에 보내 배열로 출력해서 view에 담기
     const view = new match.route.component({
-      $target,
+      $target: this.$app,
       $initialStaste: this.getParams(match),
     });
 
-    $app.innerHTML = view.render();
+    view.render();
   };
 
   this.navigateTo = (url) => {
