@@ -1,14 +1,24 @@
 import { createEl } from "../../../utils/createEl.js";
+import API from "../../../utils/api.js";
 import ItemEl from "../../organism/ItemEl/index.js";
 
 console.log("ItemsPage is running!");
 
 export default function ItemsPage({ $target }) {
-  this.render = () => {
+  this.setState = (state) => {
+    this.state = {
+      ...this.state,
+      ...state,
+    };
+  };
+
+  this.render = async () => {
     $target.innerHTML = "";
     this.ItemList = createEl("div", "item-list");
     $target.appendChild(this.ItemList);
-
+    this.setState({
+      items: await API("GET"),
+    });
     const markup = this.makeMarkup();
     this.ItemList.innerHTML = markup;
   };

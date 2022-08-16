@@ -35,11 +35,11 @@ export default function App({ $target }) {
         component: ItemsPage,
       },
       {
-        path: "/items",
+        path: "/mall",
         component: ItemsPage,
       },
       {
-        path: "/items/:id",
+        path: "/mall/:id",
         component: DetailPage,
       },
       {

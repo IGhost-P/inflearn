@@ -20,10 +20,9 @@ export default function ItemEl({ initialState }) {
                         ? `
                             <div class="item-el__discount-price">${comma(
                               price * discountRate
-                            )}
-                            }</div>
+                            )}</div>
                             <div class="item-el__discount-percent">${
-                              discountRate * 100 + "%"
+                              discountRate + "%"
                             }</div>
                 `
                         : ""
