@@ -4,10 +4,15 @@ export default function ItemEl({ initialState }) {
     ...initialState,
   };
 
+  this.onClick = () => {
+    console.log("onClick");
+    history.pushState(null, null, `/mall/${this.state.id}`);
+  };
+
   this.makeMarkup = () => {
     const { id, productName, price, thumbnailImg, discountRate } = this.state;
     return `
-            <div class="item-el">
+            <div class="item-el" data-id=${id}>
                 <div class="item-el__image">
                     <img src="${thumbnailImg}" alt="${productName}" />
                 </div>

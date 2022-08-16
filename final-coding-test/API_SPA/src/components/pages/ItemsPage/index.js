@@ -51,11 +51,11 @@ export default function ItemsPage({ $target }) {
   this.makeMarkup = () => {
     return this.state.items
       .map((item) => {
-        console.log(item);
-        return new ItemEl({ initialState: item }).makeMarkup();
+        return new ItemEl({
+          $target: this.ItemList,
+          initialState: item,
+        }).makeMarkup();
       })
       .join("");
   };
-
-  this.render();
 }

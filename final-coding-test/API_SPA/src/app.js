@@ -53,8 +53,6 @@ export default function App({ $target }) {
     ];
 
     const potentialMatches = routes.map((route) => {
-      console.log("원본 경로", route.path);
-      console.log("정규식", this.pathToRegex(route.path));
       return {
         route: route,
         // result로 변경하고 정규식과 일치하는 pathname을 담는다
@@ -67,8 +65,7 @@ export default function App({ $target }) {
     let match = potentialMatches.find(
       (potentialMatch) => potentialMatch.result !== null
     );
-    console.log(potentialMatches, match);
-    // 메인 페이지로 이동시키자
+    // 에러 페이지로 이동시키자
     if (!match) {
       const page = new ErrorPage({ $target: this.$app });
       page.render();
@@ -79,7 +76,6 @@ export default function App({ $target }) {
       $target: this.$app,
       $initialStaste: this.getParams(match),
     });
-
     view.render();
   };
 
@@ -87,17 +83,18 @@ export default function App({ $target }) {
     history.pushState(null, null, url);
     this.router();
   };
+
   // 뒤로가기 하거나 새로고침 했을 때 router도 그 페이지에 맞게 동작하도록
   window.addEventListener("popstate", this.router);
 
   document.addEventListener("DOMContentLoaded", () => {
     // 클릭 이벤트가 발생했을 때,
-    // 해당 target이 'data-link' attribute가 있다면(있어야 라우트 하는 건줄 아니깐),
-    // 페이지 이동 함수 실행
+
     document.body.addEventListener("click", (e) => {
-      if (e.target.matches("[data-link]")) {
+      if (e.target.closest(".item-el")) {
         e.preventDefault();
-        this.navigateTo(e.target.href);
+        const id = e.target.closest(".item-el").dataset.id;
+        this.navigateTo(`/mall/${id}`);
       }
     });
   });
