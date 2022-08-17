@@ -1,5 +1,7 @@
 import { createEl } from "../../../utils/createEl.js";
 import API from "../../../utils/api.js";
+import comma from "../../../utils/comma.js";
+import clickLike from "../../../utils/clickLike.js";
 export default function DetailPage({ $target, $initialState }) {
   this.param = $initialState;
   this.state = {};
@@ -17,7 +19,8 @@ export default function DetailPage({ $target, $initialState }) {
     $target.appendChild($detail);
     this.setState(await API("GET", "/" + this.param.id));
     const markup = this.makeMarkup();
-    console.log(this.state);
+
+    $detail.innerHTML = markup;
   };
 
   this.makeMarkup = () => {
@@ -36,8 +39,78 @@ export default function DetailPage({ $target, $initialState }) {
       modDate,
     } = this.state;
 
-    return ``;
+    return `
+    <div class="item-dtail" data-id=${id}>
+      <div class="item-detail__image">
+        <img src="${thumbnailImg}" alt="${productName}" />
+      </div>
+      <div class="item-detail__info">
+        <div class="item-detail__title">
+          <div class="item-detail__name">${productName}</div>
+          <div class="item-detail__price">${comma(price)}</div>
+        </div>
+      </div>
+      <div class="item-detail__option__box">
+        <p class="item-detail__option__text"택배 배송 / 무료 배송</p>
+        <hr class="item-detail__option__line" />
+
+      ${
+        option.length > 0
+          ? `
+        <div class="item-detail__option">
+          <button class="item-detail__option__btn">옵션을 선택하세요</button>
+
+          ${
+            isOptionSelected &&
+            option.map((item) => {
+              return `
+              <div class="item-detail__option__item">
+                <div class="item-detail__option__item__name">${item.name}</div>
+                <div class="item-detail__option__item__price">${comma(
+                  item.price
+                )}</div>
+              </div>
+              `;
+            })
+          }
+        `
+          : `<div class="item-detail__option">${option}</div>`
+      }
+      <hr class="item-detail__option__line" />
+      </div>
+      <div class="item-detail__price__container">
+        <p class="item-detail__price__text">총 상품 금액</p>
+        <p class="item-detail__price__len">
+          총 수랭${"1"}개</p>
+          <hr class="item-detail__price__line__up" />
+        <p class="item-detail__price__price">${comma(price)}</p>
+        </div>
+        <div class="item-detail__price__btn__container">
+          <button class="item-detail__price__btn">바로 구매</button>
+          <button class="item-detail__price__shop_btn">장바구니 담기</button>
+          ${
+            localStorage.getItem(id) === "true"
+              ? `<div class="item-detail__like"><img src="../src/assets/icon-heart-on.svg"></div>`
+              : `<div class="item-detail__like"><img src="../src/assets/icon-heart.svg"></div>`
+          }
+        </div>
+      </div>      
+    `;
   };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("click", async (e) => {
+      console.log("디테일 눌림");
+      if (e.target.closest(".item-detail__like")) {
+        if (localStorage.getItem(this.state.id) === "true") {
+          localStorage.setItem(this.state.id, false);
+        } else {
+          localStorage.setItem(this.state.id, true);
+        }
+        await this.render();
+      }
+    });
+  });
 }
 
 // {
