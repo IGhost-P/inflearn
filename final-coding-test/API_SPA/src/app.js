@@ -115,7 +115,6 @@ export default function App({ $target }) {
 
     document.body.addEventListener("click", async (e) => {
       if (e.target.closest(".item-detail__like")) {
-        console.log("like", e.target.closest(".item-detail"));
         e.preventDefault();
         const id = e.target.closest(".item-detail").dataset.id;
         if (localStorage.getItem(id) === "true") {
