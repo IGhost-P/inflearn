@@ -87,3 +87,7 @@
     line-height: 20px;
     color: #6327FE;
 }
+
+.active{
+    opacity: 1;
+}

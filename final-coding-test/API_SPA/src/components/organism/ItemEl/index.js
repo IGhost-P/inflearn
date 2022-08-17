@@ -1,11 +1,14 @@
 import comma from "../../../utils/comma.js";
-export default function ItemEl({ initialState, like }) {
+export default function ItemEl({ initialState }) {
   this.state = {
     ...initialState,
   };
 
   this.makeMarkup = () => {
     const { id, productName, price, thumbnailImg, discountRate } = this.state;
+
+    const like = localStorage.getItem(id) === "true" ? true : false;
+
     return `
             <div class="item-el" data-id=${id}>
                 <div class="item-el__image">

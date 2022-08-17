@@ -1,4 +1,5 @@
 import { createEl } from "./utils/createEl.js";
+import { $ } from "./utils/select.js";
 import ItemsPage from "./components/pages/ItemsPage/index.js";
 import DetailPage from "./components/pages/DetailPage/index.js";
 import ShoppingCartPage from "./components/pages/ShoppingCartPage/index.js";
@@ -71,7 +72,6 @@ export default function App({ $target }) {
       page.render();
     }
 
-    console.log(this.getParams(match));
     // match 정보를 getParams에 보내 배열로 출력해서 view에 담기
     const view = new match.route.component({
       $target: this.$app,
@@ -96,6 +96,35 @@ export default function App({ $target }) {
         e.preventDefault();
         const id = e.target.closest(".item-el").dataset.id;
         this.navigateTo(`/mall/${id}`);
+      }
+    });
+
+    document.body.addEventListener("click", async (e) => {
+      if (e.target.closest(".item-el__like")) {
+        e.preventDefault();
+        const id = e.target.closest(".item-el").dataset.id;
+        if (localStorage.getItem(id) === "true") {
+          localStorage.setItem(id, false);
+          $(".item-el__like > img").src = "src/assets/icon-heart.svg";
+        } else {
+          localStorage.setItem(id, true);
+          $(".item-el__like > img").src = "src/assets/icon-heart-on.svg";
+        }
+      }
+    });
+
+    document.body.addEventListener("click", async (e) => {
+      if (e.target.closest(".item-detail__like")) {
+        console.log("like", e.target.closest(".item-detail"));
+        e.preventDefault();
+        const id = e.target.closest(".item-detail").dataset.id;
+        if (localStorage.getItem(id) === "true") {
+          localStorage.setItem(id, false);
+          $(".item-detail__like > img").src = "../src/assets/icon-heart.svg";
+        } else {
+          localStorage.setItem(id, true);
+          $(".item-detail__like > img").src = "../src/assets/icon-heart-on.svg";
+        }
       }
     });
   });

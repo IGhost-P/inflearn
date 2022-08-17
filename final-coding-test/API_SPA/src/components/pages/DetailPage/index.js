@@ -40,7 +40,7 @@ export default function DetailPage({ $target, $initialState }) {
     } = this.state;
 
     return `
-    <div class="item-dtail" data-id=${id}>
+    <div class="item-detail" data-id=${id}>
       <div class="item-detail__image">
         <img src="${thumbnailImg}" alt="${productName}" />
       </div>
@@ -97,20 +97,6 @@ export default function DetailPage({ $target, $initialState }) {
       </div>      
     `;
   };
-
-  document.addEventListener("DOMContentLoaded", () => {
-    document.addEventListener("click", async (e) => {
-      console.log("디테일 눌림");
-      if (e.target.closest(".item-detail__like")) {
-        if (localStorage.getItem(this.state.id) === "true") {
-          localStorage.setItem(this.state.id, false);
-        } else {
-          localStorage.setItem(this.state.id, true);
-        }
-        await this.render();
-      }
-    });
-  });
 }
 
 // {
