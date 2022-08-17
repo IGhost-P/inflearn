@@ -71,10 +71,11 @@ export default function App({ $target }) {
       page.render();
     }
 
+    console.log(this.getParams(match));
     // match 정보를 getParams에 보내 배열로 출력해서 view에 담기
     const view = new match.route.component({
       $target: this.$app,
-      $initialStaste: this.getParams(match),
+      $initialState: this.getParams(match),
     });
     view.render();
   };
@@ -91,7 +92,7 @@ export default function App({ $target }) {
     // 클릭 이벤트가 발생했을 때,
 
     document.body.addEventListener("click", (e) => {
-      if (e.target.closest(".item-el")) {
+      if (e.target.closest(".item-el__image")) {
         e.preventDefault();
         const id = e.target.closest(".item-el").dataset.id;
         this.navigateTo(`/mall/${id}`);

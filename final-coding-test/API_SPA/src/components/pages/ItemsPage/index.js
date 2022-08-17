@@ -12,6 +12,10 @@ export default function ItemsPage({ $target }) {
     };
   };
 
+  this.update = async () => {
+    this.render();
+  };
+
   this.render = async () => {
     $target.innerHTML = "";
     this.ItemList = createEl("div", "item-list");
@@ -24,28 +28,7 @@ export default function ItemsPage({ $target }) {
   };
 
   this.state = {
-    items: [
-      {
-        id: 1,
-        productName: "Hack Your Life 개발자 노트북 파우치",
-        price: 29000,
-        thumbnailImg: "https://via.placeholder.com/380x380",
-        discountRate: 0.19,
-      },
-      {
-        id: 2,
-        productName: "상품명2",
-        price: 200000,
-        thumbnailImg: "https://via.placeholder.com/380x380",
-        discountRate: 0.2,
-      },
-      {
-        id: 3,
-        productName: "상품명3",
-        price: 300000,
-        thumbnailImg: "https://via.placeholder.com/380x380",
-      },
-    ],
+    items: [],
   };
 
   this.makeMarkup = () => {
@@ -54,8 +37,25 @@ export default function ItemsPage({ $target }) {
         return new ItemEl({
           $target: this.ItemList,
           initialState: item,
+          like: localStorage.getItem(item.id) === "true" ? true : false,
         }).makeMarkup();
       })
       .join("");
   };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener("click", async (e) => {
+      if (e.target.closest(".item-el__like")) {
+        if (
+          localStorage.getItem(e.target.closest(".item-el").dataset.id) ===
+          "true"
+        ) {
+          localStorage.setItem(e.target.closest(".item-el").dataset.id, false);
+        } else {
+          localStorage.setItem(e.target.closest(".item-el").dataset.id, true);
+        }
+        await this.update();
+      }
+    });
+  });
 }

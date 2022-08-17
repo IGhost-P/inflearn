@@ -1,12 +1,7 @@
 import comma from "../../../utils/comma.js";
-export default function ItemEl({ initialState }) {
+export default function ItemEl({ initialState, like }) {
   this.state = {
     ...initialState,
-  };
-
-  this.onClick = () => {
-    console.log("onClick");
-    history.pushState(null, null, `/mall/${this.state.id}`);
   };
 
   this.makeMarkup = () => {
@@ -17,7 +12,14 @@ export default function ItemEl({ initialState }) {
                     <img src="${thumbnailImg}" alt="${productName}" />
                 </div>
                 <div class="item-el__info">
+                  <div class="item-el__title">
                     <div class="item-el__name">${productName}</div>
+                    ${
+                      like
+                        ? `<div class="item-el__like"><img src="src/assets/icon-heart-on.svg"></div>`
+                        : `<div class="item-el__like"><img src="src/assets/icon-heart.svg"></div>`
+                    }
+                  </div>
                 <div class="item-el__price_box">
                     <div class="item-el__price">${comma(price)}</div>
                     ${

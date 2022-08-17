@@ -21,10 +21,6 @@
     height: 462px;
     padding: 0.5rem;
 }
-.item-el:hover {
-    background-color: #f5f5f5;
-    border-radius: 10px;
-}
 
 .item-el__image{
     width: 380px;
@@ -34,9 +30,22 @@
     border-radius: 10px;
     margin-bottom: 20px;
 }
+.item-el__image:hover{
+    cursor: pointer;
+    background-color: #828282;
+}
+
 
 .item-el__info{
     width: 100%;
+   
+}
+
+.item-el__title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .item-el__name{
@@ -45,6 +54,7 @@
     line-height: 22px;
     color: #333333;
     margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .item-el__price_box{
